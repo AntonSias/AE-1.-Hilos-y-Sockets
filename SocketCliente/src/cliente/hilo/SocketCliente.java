@@ -52,7 +52,9 @@ public class SocketCliente {
 				System.out.println("  4.            AÑADIR PELICULA             ");
 				System.out.println("  5                 SALIR                   ");
 				
-				texto = sc.nextLine();//frase que vamos a mandar para contar				
+				texto = sc.nextLine();//frase que vamos a mandar para contar	
+				
+				
 				
 				salida.println(texto);
 				System.out.println("CLIENTE: Esperando respuesta ...... ");				
