@@ -9,74 +9,45 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
+
+
 public class SocketServidor{
 
 	public static final int PUERTO = 2017;
 	
 	public static void main(String[] args) throws InterruptedException {
-		System.out.println("      APLICACIÓN DE SERVIDOR      ");
-		System.out.println("----------------------------------");
+		System.out.println("      APLICACI�N DE SERVIDOR CON HILOS     ");
+		System.out.println("-------------------------------------------");		
 		
-//EL CANAL DE ENTRADA DEL SERVIDOR POR CUAL EL CLIENTE NOS VA A MANDAR INFORMACION:
-		InputStreamReader entrada = null;
+		int peticion = 0;
 		
-//EL CANAL DE SALIDA DEL SERVIDOR POR CUAL VAMOS A ENVIAR INFORMACION AL CLIENTE
-		PrintStream salida = null;
-		
-//SOCKET - ES LA CLASE QUE NOS VA A PERMITIR COMUNICARNOS CON EL CLIENTE
-		Socket socketAlCliente = null;
-//
-		InetSocketAddress direccion = new InetSocketAddress(PUERTO);
-		
-//
-		try (ServerSocket serverSocket = new ServerSocket()){
-		
-//AVISAMOS AL SERER SOCKET QUE ESCUCHE PETICIONES DESDE EL PUERTO STABLECIDO:
-			serverSocket.bind(direccion);
-//VAMOS A LLEVAR LA CUNETA DE LAS PETCICONES QUE SE VAN A EJECUTAR:
-			int peticion = 0;
-			
-//ESTAMOS CONTINUAMENTE ESCUCHANDO EL COMPORTAMIENTO DE UN SERVIDOR , UN PROGRAMA QUE NO PARA NUNCA:
-			while(true){
-				System.out.println("SERVIDOR:ESPERANDO PETICIONES POR EL PUERTO " + PUERTO);
-				
-//EL PROGRAMA SE PARA HASTA QUE ENTRE LA PETICION DE UN CLIENTE ,
-//SERA EN ESTE MOMENTO CUENDO SE CREA UN OBEJTO SOCKET
-				socketAlCliente = serverSocket.accept();
-				System.out.println("SERVIDOR:PETICION NUMERO " + ++peticion + " RECIBIDA");
-				entrada = new InputStreamReader(socketAlCliente.getInputStream());
-				BufferedReader bf = new BufferedReader(entrada);
+		try (ServerSocket servidor = new ServerSocket()){			
+			InetSocketAddress direccion = new InetSocketAddress(PUERTO);
+			servidor.bind(direccion);
 
-//EL SERVIDOR SE QUEDARA AQUI PARADO HASTA QUE EL CLIENTE NOS MADE INFORMACION
-				String stringRecibido = bf.readLine();
-				
-				System.out.println("SERVIDOR: ME HA LLEGADO DEL CLIENTE : " + stringRecibido);
-				
-//SE SUPONE UNA SIMULACION DE ESPERA , HAY SITUACIONES CUANDO EL SERVIDOR TARDA EN RESPONDER:
-				Thread.sleep(15000);
-				
-//MANDMAOS EL RESULTADO AL CLIENTE:
-				salida = new PrintStream(socketAlCliente.getOutputStream());
-				String resultado = "";
-				salida.println(resultado);
-				
-				
-//CERAMOS LAS CONEXIONES :
-				socketAlCliente.close();
-			} 
+			System.out.println("SERVIDOR: Esperando peticion por el puerto " + PUERTO);
+			
+			while (true) {
+				//Por cada peticion de cliente aceptada se me crea un objeto socket diferente
+				Socket socketAlCliente = servidor.accept();
+				System.out.println("SERVIDOR: peticion numero " + ++peticion + " recibida");
+				//Abrimos un hilo nuevo y liberamos el hilo principal para que pueda
+				//recibir peticiones de otros clientes
+				new HiloPelicula(socketAlCliente);
+			}			
 		} catch (IOException e) {
 			System.err.println("SERVIDOR: Error de entrada/salida");
 			e.printStackTrace();
 		} catch (Exception e) {
-			System.err.println("SERVIDOR: Error -> " + e);
+			System.err.println("SERVIDOR: Error");
 			e.printStackTrace();
 		}
 				
 				
-			}
+	}
 		
 	
 	
 
-	}
+}
 

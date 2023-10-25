@@ -24,64 +24,57 @@ public class SocketCliente {
 		
     //EN ESTE PASO VAMOS A ENCAPSULAR EL IP Y EL PUERTO AL QUE NOS VAMOS A CONECTAR 
   
- InetSocketAddress direccionServidor = new InetSocketAddress(IP_SERVER, PUERTO);
- 
- try (Scanner sc = new Scanner(System.in);
-			Socket socketAlServidor = new Socket()){
-//-----------------------------------------------------------------------------
-	
+		InetSocketAddress direccionServidor = new InetSocketAddress(IP_SERVER, PUERTO);
 	 
-	 
-	 //POSIBLE LUGAR DEL MENU
-	 
-	 
-	 
- 
-//---------------------------------------------------------------------------
-		
-		
-		
- // ESTABLECEMOS LA CONEXION:
-		System.out.println("CLIENTE: Esperando a que el servidor acepte la conexión");
-		socketAlServidor.connect(direccionServidor);			
-		System.out.println("CLIENTE: Conexion establecida... a " + IP_SERVER 
-				+ " por el puerto " + PUERTO);	
-		
-//CREAMOS EL OBJETO QUE NOS PERMITE MANDAR INFORMACION AL SERVIDOR:
-		PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
-		
-		
-//CREAMOS EL OBJETO QUE NOS VA A PRMITIR LLER LA SALIDA DEL SERVIDOR:
-		InputStreamReader entrada = new InputStreamReader(socketAlServidor.getInputStream());
+		try (Scanner sc = new Scanner(System.in)){
+			
+			System.out.println("CLIENTE: Esperando a que el servidor acepte la conexi�n");
+			Socket socketAlServidor = new Socket();
+			socketAlServidor.connect(direccionServidor);
+			System.out.println("CLIENTE: Conexion establecida... a " + IP_SERVER + 
+					" por el puerto " + PUERTO);
+			
+			InputStreamReader entrada = new InputStreamReader(socketAlServidor.getInputStream());
+			BufferedReader entradaBuffer = new BufferedReader(entrada);
+			
+			PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
+			
+			String texto = "";
+			boolean continuar = true;
+			do {
+				System.out.println("CLIENTE: Escribe mensaje (FIN para terminar): ");
+				//AQUI VAMOS A METER EL MENU PARA QUE LE SALGA AL CLIENTE
+				texto = sc.nextLine();//frase que vamos a mandar para contar				
 				
-//ESTA CLASE  NOS VA A AYUDAR A LEER DATOS DEL SERVIDOR LINEA A LINEA EN VEZ DE CARCATER A CARACTER
-//COMO LA CLASE  InputStreamReader:
-		BufferedReader bf = new BufferedReader(entrada);
+				salida.println(texto);
+				System.out.println("CLIENTE: Esperando respuesta ...... ");				
+				String respuesta = entradaBuffer.readLine();
+								
+				if("OK".equalsIgnoreCase(respuesta)) {
+					continuar = false;
+				}else {
+					System.out.println("CLIENTE: Servidor responde, numero de letras: " + respuesta);
+				}				
+			}while(continuar);
+			//Cerramos la conexion
+			socketAlServidor.close();
+			
+		} catch (UnknownHostException e) {
+			System.err.println("CLIENTE: No encuentro el servidor en la direcci�n" + IP_SERVER);
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("CLIENTE: Error de entrada/salida");
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("CLIENTE: Error -> " + e);
+			e.printStackTrace();
+		}
 		
-		System.out.println("CLIENTE: ESPERANDO AL RESULTADO DEL SERVIDOR...");
-		
-//AQUI EL HILO PRINCIPAL VA A QUEDAR PARADO HASTA QUE EL SERVIDOR RESPONDA :
-		String resultado = bf.readLine();
-		
- } catch (UnknownHostException e) {
-		System.err.println("CLIENTE:NO ENCUENTRO EL SERVIDO E LA DIRECCIÓN" + IP_SERVER);
-		e.printStackTrace();
-	} catch (IOException e) {
-		System.err.println("CLIENTE:ERROR ENTRADA/SALIDA");
-		e.printStackTrace();
-	} catch (Exception e) {
-		System.err.println("CLIENTE:ERROR-> " + e);
-		e.printStackTrace();
+		System.out.println("CLIENTE: Fin del programa");
 	}
-	
-	System.out.println("CLIENTE: ---FIN DEL PROGRAMA---");
-}
-		
-		
-		
-		
+ 
+}	 
 
-	}
 
 
  
