@@ -16,7 +16,7 @@ public class SocketServidor{
 	public static final int PUERTO = 2017;
 	
 	public static void main(String[] args) throws InterruptedException {
-		System.out.println("      APLICACI�N DE SERVIDOR CON HILOS     ");
+		System.out.println("      APLICACiÓN DE SERVIDOR CON HILOS     ");
 		System.out.println("-------------------------------------------");		
 		
 		int peticion = 0;

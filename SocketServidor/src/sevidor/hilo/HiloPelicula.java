@@ -5,73 +5,38 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HiloPelicula implements Runnable {
 	
-	private String idPelicula;
-	private String titulo;
-	private String director;
-	private int precio;
+	
 	private int numCliente = 0;
 	private Thread hilo;
 	private Socket socketAlCliente;
+	private List<PeliculaClass> listaPeliculas = new ArrayList<>();
 	
-	//CONSTRUCTOR POR DEFECTO:
-		public HiloPelicula() {
-			super();
-		}
 	
-	// CONSTRUCTOR CON TODOD:
-	public HiloPelicula(String idPelicula, String titulo, String director, int precio) {
-		super();
-		this.idPelicula = idPelicula;
-		this.titulo = titulo;
-		this.director = director;
-		this.precio = precio;
-		this.socketAlCliente = socketAlCliente;
-		
-	}
 	
+	//CONSTRUCTOR SOCKER
 	public HiloPelicula(Socket socketAlCliente) {
 		numCliente++;
 		hilo = new Thread(this, "Cliente_"+numCliente);
 		this.socketAlCliente = socketAlCliente;
+		
+		//dejamos inicializadas la lista de peliculas cada vez
+		//que arranquemos un hilo
+		 listaPeliculas.add(new PeliculaClass("1", "Pelicula 1", "Director 1", 10));
+	     listaPeliculas.add(new PeliculaClass("2", "Pelicula 2", "Director 2", 15));
+	     listaPeliculas.add(new PeliculaClass("3", "Pelicula 3", "Director 3", 20));
+	     listaPeliculas.add(new PeliculaClass("4", "Pelicula 4", "Director 4", 12));
+	     listaPeliculas.add(new PeliculaClass("5", "Pelicula 5", "Director 5", 18));
+	     
 		hilo.start();
 	}
 	
-	//GETTER AND SETTERS::
 	
-	public String getIdPelicula() {
-		return idPelicula;
-	}
-	
-	public void setIdPelicula(String idPelicula) {
-		this.idPelicula = idPelicula;
-	}
-	
-	public String getTitulo() {
-		return titulo;
-	}
-	
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-	
-	public String getDirector() {
-		return director;
-	}
-	
-	public void setDirector(String director) {
-		this.director = director;
-	}
-	
-	public int getPrecio() {
-		return precio;
-	}
-	
-	public void setPrecio(int precio) {
-		this.precio = precio;
-	}
 	
 	@Override
 	public void run() {
@@ -118,7 +83,8 @@ public class HiloPelicula implements Runnable {
 				case 5: {
 					
 					//METODO SALIR
-					salida.println("Saliendoi del programa");
+					salida.println("salir");
+					System.out.println("Saliendo del programa");
 					continuar = false;
 					
 				}

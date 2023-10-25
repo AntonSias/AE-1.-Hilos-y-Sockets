@@ -58,10 +58,10 @@ public class SocketCliente {
 				System.out.println("CLIENTE: Esperando respuesta ...... ");				
 				String respuesta = entradaBuffer.readLine();
 								
-				if("OK".equalsIgnoreCase(respuesta)) {
+				if("salir".equalsIgnoreCase(respuesta)) {
 					continuar = false;
 				}else {
-					System.out.println("CLIENTE: Servidor responde, numero de letras: " + respuesta);
+					System.out.println("CLIENTE: Servidor responde : " + respuesta);
 				}				
 			}while(continuar);
 			//Cerramos la conexion
