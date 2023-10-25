@@ -42,8 +42,16 @@ public class SocketCliente {
 			String texto = "";
 			boolean continuar = true;
 			do {
-				System.out.println("CLIENTE: Escribe mensaje (FIN para terminar): ");
+				System.out.println("Escriba el número de la opción deseada");
 				//AQUI VAMOS A METER EL MENU PARA QUE LE SALGA AL CLIENTE
+				System.out.println("               ******MENU******             ");
+				System.out.println("               ----------------             ");
+				System.out.println("  1.        CONSULTAR PELICULA POR ID       ");
+				System.out.println("  2.      CONSULTAR PELICULA POR TITULO     ");
+				System.out.println("  3.     CONSULTAR PELICULA POR DIRECTOR    ");
+				System.out.println("  4.            AÑADIR PELICULA             ");
+				System.out.println("  5                 SALIR                   ");
+				
 				texto = sc.nextLine();//frase que vamos a mandar para contar				
 				
 				salida.println(texto);

@@ -12,6 +12,7 @@ public class HiloPelicula implements Runnable {
 	private String titulo;
 	private String director;
 	private int precio;
+	private int numCliente = 0;
 	private Thread hilo;
 	private Socket socketAlCliente;
 	
@@ -29,6 +30,12 @@ public class HiloPelicula implements Runnable {
 		this.precio = precio;
 		this.socketAlCliente = socketAlCliente;
 		
+	}
+	
+	public HiloPelicula(Socket socketAlCliente) {
+		numCliente++;
+		hilo = new Thread(this, "Cliente_"+numCliente);
+		this.socketAlCliente = socketAlCliente;
 		hilo.start();
 	}
 	
