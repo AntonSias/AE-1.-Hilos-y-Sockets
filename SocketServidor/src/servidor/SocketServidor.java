@@ -1,10 +1,9 @@
-package sevidor.hilo;
+package servidor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,49 +11,6 @@ import java.util.List;
 
 public class SocketServidor {
 
-<<<<<<< HEAD:SocketServidor/src/sevidor/hilo/SocketServidor.java
-
-
-public class SocketServidor{
-
-	public static final int PUERTO = 2017;
-	
-	public static void main(String[] args) throws InterruptedException {
-		System.out.println("      APLICACiÓN DE SERVIDOR CON HILOS     ");
-		System.out.println("-------------------------------------------");		
-		
-		int peticion = 0;
-		
-		try (ServerSocket servidor = new ServerSocket()){			
-			InetSocketAddress direccion = new InetSocketAddress(PUERTO);
-			servidor.bind(direccion);
-
-			System.out.println("SERVIDOR: Esperando peticion por el puerto " + PUERTO);
-			
-			while (true) {
-				//Por cada peticion de cliente aceptada se me crea un objeto socket diferente
-				Socket socketAlCliente = servidor.accept();
-				System.out.println("SERVIDOR: peticion numero " + ++peticion + " recibida");
-				//Abrimos un hilo nuevo y liberamos el hilo principal para que pueda
-				//recibir peticiones de otros clientes
-				new HiloPelicula(socketAlCliente);
-			}			
-		} catch (IOException e) {
-			System.err.println("SERVIDOR: Error de entrada/salida");
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.err.println("SERVIDOR: Error");
-			e.printStackTrace();
-		}
-				
-				
-	}
-		
-	
-	
-
-}
-=======
     public static final int PUERTO = 2020;
 
     public static void main(String[] args) {
@@ -63,12 +19,11 @@ public class SocketServidor{
 
         List<Pelicula> peliculas = new ArrayList<>();
 
-        peliculas.add(new Pelicula("A0215", "Encuentro en la tercera fase", "Steven Spillberg", 25));
-        peliculas.add(new Pelicula("A025", "La lista de Schindler ", "Steven Spillberg", 25));
+        peliculas.add(new Pelicula("A0215", "Encuentro en la tercera fase", "Steven Spielberg", 25));
+        peliculas.add(new Pelicula("A025", "La lista de Schindler", "Steven Spielberg", 25));
         peliculas.add(new Pelicula("A752", "Los idiotas", "Lars Von Trier", 18));
         peliculas.add(new Pelicula("A962", "Cache", "Michael Haneke", 12));
-        peliculas.add(new Pelicula("A0256", "Mullholand Drive", "David Lynch", 30));
->>>>>>> 3ca4b2c54b26ccc06ecc865dad3e69f5f9883057:SocketServidor/src/servidor/SocketServidor.java
+        peliculas.add(new Pelicula("A0256", "Mulholland Drive", "David Lynch", 30));
 
         try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
             int peticion = 0;
@@ -102,17 +57,7 @@ public class SocketServidor{
                         }
                     } else if (stringRecibido.equals("5")) {
                         // Agregar una nueva película
-                        String idPelicula = bf.readLine();
-                        String titulo = bf.readLine();
-                        String director = bf.readLine();
-                        int precio = Integer.parseInt(bf.readLine());
-
-                        synchronized (peliculas) {
-                            peliculas.add(new Pelicula(idPelicula, titulo, director, precio));
-                        }
-
-                        PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                        salida.println("Película agregada exitosamente.");
+                        agregarPelicula(bf, peliculas, socketAlCliente);
                     } else {
                         // Simulación de espera
                         Thread.sleep(15000);
@@ -131,6 +76,33 @@ public class SocketServidor{
             }
         } catch (IOException e) {
             System.err.println("SERVIDOR: Error de entrada/salida");
+            e.printStackTrace();
+        }
+    }
+
+    // Metodo añadir pelicula
+    private static void agregarPelicula(BufferedReader bf, List<Pelicula> peliculas, Socket socketAlCliente) {
+        try {
+            String idPelicula = bf.readLine();
+            String titulo = bf.readLine();
+            String director = bf.readLine();
+            int precio;
+            try {
+            	String precioStr = bf.readLine();
+                precio = Integer.parseInt(precioStr);
+            } catch (NumberFormatException e) {
+                System.err.println("SERVIDOR: Error al convertir precio a entero");
+                precio = 0; // Asigna un valor por defecto si el precio no es válido
+            }
+
+            synchronized (peliculas) {
+                peliculas.add(new Pelicula(idPelicula, titulo, director, precio));
+            }
+
+            PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
+            salida.println("Película agregada exitosamente.");
+        } catch (IOException e) {
+            System.err.println("SERVIDOR: Error de entrada/salida al agregar película");
             e.printStackTrace();
         }
     }
