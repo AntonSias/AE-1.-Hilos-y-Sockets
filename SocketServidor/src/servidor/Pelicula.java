@@ -1,4 +1,4 @@
-package sevidor.hilo;
+package servidor;
 
 public class Pelicula {
 	

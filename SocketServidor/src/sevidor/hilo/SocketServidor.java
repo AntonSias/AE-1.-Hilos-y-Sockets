@@ -7,76 +7,87 @@ import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
+public class SocketServidor {
 
-public class SocketServidor{
+    public static final int PUERTO = 2020;
 
-	public static final int PUERTO = 2017;
-	
-	public static void main(String[] args) throws InterruptedException {
-		System.out.println("      APLICACIÓN DE SERVIDOR      ");
-		System.out.println("----------------------------------");
-		
-//EL CANAL DE ENTRADA DEL SERVIDOR POR CUAL EL CLIENTE NOS VA A MANDAR INFORMACION:
-		InputStreamReader entrada = null;
-		
-//EL CANAL DE SALIDA DEL SERVIDOR POR CUAL VAMOS A ENVIAR INFORMACION AL CLIENTE
-		PrintStream salida = null;
-		
-//SOCKET - ES LA CLASE QUE NOS VA A PERMITIR COMUNICARNOS CON EL CLIENTE
-		Socket socketAlCliente = null;
-//
-		InetSocketAddress direccion = new InetSocketAddress(PUERTO);
-		
-//
-		try (ServerSocket serverSocket = new ServerSocket()){
-		
-//AVISAMOS AL SERER SOCKET QUE ESCUCHE PETICIONES DESDE EL PUERTO STABLECIDO:
-			serverSocket.bind(direccion);
-//VAMOS A LLEVAR LA CUNETA DE LAS PETCICONES QUE SE VAN A EJECUTAR:
-			int peticion = 0;
-			
-//ESTAMOS CONTINUAMENTE ESCUCHANDO EL COMPORTAMIENTO DE UN SERVIDOR , UN PROGRAMA QUE NO PARA NUNCA:
-			while(true){
-				System.out.println("SERVIDOR:ESPERANDO PETICIONES POR EL PUERTO " + PUERTO);
-				
-//EL PROGRAMA SE PARA HASTA QUE ENTRE LA PETICION DE UN CLIENTE ,
-//SERA EN ESTE MOMENTO CUENDO SE CREA UN OBEJTO SOCKET
-				socketAlCliente = serverSocket.accept();
-				System.out.println("SERVIDOR:PETICION NUMERO " + ++peticion + " RECIBIDA");
-				entrada = new InputStreamReader(socketAlCliente.getInputStream());
-				BufferedReader bf = new BufferedReader(entrada);
+    public static void main(String[] args) {
+        System.out.println("APLICACIÓN DE SERVIDOR");
+        System.out.println("----------------------");
 
-//EL SERVIDOR SE QUEDARA AQUI PARADO HASTA QUE EL CLIENTE NOS MADE INFORMACION
-				String stringRecibido = bf.readLine();
-				
-				System.out.println("SERVIDOR: ME HA LLEGADO DEL CLIENTE : " + stringRecibido);
-				
-//SE SUPONE UNA SIMULACION DE ESPERA , HAY SITUACIONES CUANDO EL SERVIDOR TARDA EN RESPONDER:
-				Thread.sleep(15000);
-				
-//MANDMAOS EL RESULTADO AL CLIENTE:
-				salida = new PrintStream(socketAlCliente.getOutputStream());
-				String resultado = "";
-				salida.println(resultado);
-				
-				
-//CERAMOS LAS CONEXIONES :
-				socketAlCliente.close();
-			} 
-		} catch (IOException e) {
-			System.err.println("SERVIDOR: Error de entrada/salida");
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.err.println("SERVIDOR: Error -> " + e);
-			e.printStackTrace();
-		}
-				
-				
-			}
-		
-	
-	
+        List<Pelicula> peliculas = new ArrayList<>();
 
-	}
+        peliculas.add(new Pelicula("A0215", "Encuentro en la tercera fase", "Steven Spillberg", 25));
+        peliculas.add(new Pelicula("A025", "La lista de Schindler ", "Steven Spillberg", 25));
+        peliculas.add(new Pelicula("A752", "Los idiotas", "Lars Von Trier", 18));
+        peliculas.add(new Pelicula("A962", "Cache", "Michael Haneke", 12));
+        peliculas.add(new Pelicula("A0256", "Mullholand Drive", "David Lynch", 30));
 
+        try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
+            int peticion = 0;
+
+            while (true) {
+                System.out.println("SERVIDOR: Esperando peticiones en el puerto " + PUERTO);
+
+                try (Socket socketAlCliente = serverSocket.accept()) {
+                    System.out.println("SERVIDOR: Petición número " + ++peticion + " recibida");
+
+                    InputStreamReader entrada = new InputStreamReader(socketAlCliente.getInputStream());
+                    BufferedReader bf = new BufferedReader(entrada);
+
+                    String stringRecibido = bf.readLine();
+                    System.out.println("SERVIDOR: Me ha llegado del cliente: " + stringRecibido);
+
+                    if (stringRecibido.equals("3")) {
+                        String director = bf.readLine();
+                        boolean encontrada = false;
+                        for (Pelicula pelicula : peliculas) {
+                            if (pelicula.getDirector().equalsIgnoreCase(director)) {
+                                encontrada = true;
+                                PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
+                                salida.println(pelicula.getIdPelicula() + " - " + pelicula.getTitulo());
+                            }
+                        }
+
+                        if (!encontrada) {
+                            PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
+                            salida.println("No se encontraron películas para ese director.");
+                        }
+                    } else if (stringRecibido.equals("5")) {
+                        // Agregar una nueva película
+                        String idPelicula = bf.readLine();
+                        String titulo = bf.readLine();
+                        String director = bf.readLine();
+                        int precio = Integer.parseInt(bf.readLine());
+
+                        synchronized (peliculas) {
+                            peliculas.add(new Pelicula(idPelicula, titulo, director, precio));
+                        }
+
+                        PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
+                        salida.println("Película agregada exitosamente.");
+                    } else {
+                        // Simulación de espera
+                        Thread.sleep(15000);
+
+                        PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
+                        String resultado = "";
+                        salida.println(resultado);
+                    }
+                } catch (IOException e) {
+                    System.err.println("SERVIDOR: Error de entrada/salida");
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    System.err.println("SERVIDOR: Error en la espera");
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("SERVIDOR: Error de entrada/salida");
+            e.printStackTrace();
+        }
+    }
+}
