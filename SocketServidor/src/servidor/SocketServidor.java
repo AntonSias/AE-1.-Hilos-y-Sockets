@@ -1,5 +1,7 @@
 package servidor;
 
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,9 +44,10 @@ public class SocketServidor {
 
                     if (stringRecibido.equals("3")) {
                         String director = bf.readLine();
+                        String directorLimpio = director.trim();
                         boolean encontrada = false;
                         for (Pelicula pelicula : peliculas) {
-                            if (pelicula.getDirector().equalsIgnoreCase(director)) {
+                            if (pelicula.getDirector().equalsIgnoreCase(directorLimpio)) {
                                 encontrada = true;
                                 PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                                 salida.println(pelicula.getIdPelicula() + " - " + pelicula.getTitulo());
@@ -88,7 +91,8 @@ public class SocketServidor {
             String director = bf.readLine();
             int precio;
             try {
-                precio = Integer.parseInt(bf.readLine());
+            	String precioStr = bf.readLine();
+                precio = Integer.parseInt(precioStr);
             } catch (NumberFormatException e) {
                 System.err.println("SERVIDOR: Error al convertir precio a entero");
                 precio = 0; // Asigna un valor por defecto si el precio no es válido

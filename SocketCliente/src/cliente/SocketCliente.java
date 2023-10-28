@@ -49,9 +49,9 @@ public class SocketCliente {
                     System.out.print("Ingrese el ID de la película: ");
                     String idPelicula = userInput.nextLine();
                     System.out.print("Ingrese el título de la película: ");
-                    String titulo = userInput.nextLine();
+                    String titulo = userInput.nextLine().trim();
                     System.out.print("Ingrese el nombre del director: ");
-                    String director = userInput.nextLine();
+                    String director = userInput.nextLine().trim();
                     System.out.print("Ingrese el precio de la película: ");
                     int precio = userInput.nextInt();
 
