@@ -42,9 +42,10 @@ public class SocketServidor {
 
                     if (stringRecibido.equals("3")) {
                         String director = bf.readLine();
+                        String directorLimpio = director.trim();
                         boolean encontrada = false;
                         for (Pelicula pelicula : peliculas) {
-                            if (pelicula.getDirector().equalsIgnoreCase(director)) {
+                            if (pelicula.getDirector().equalsIgnoreCase(directorLimpio)) {
                                 encontrada = true;
                                 PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                                 salida.println(pelicula.getIdPelicula() + " - " + pelicula.getTitulo());
