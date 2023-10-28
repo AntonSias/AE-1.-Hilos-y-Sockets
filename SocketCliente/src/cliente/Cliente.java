@@ -1,4 +1,4 @@
-package cliente.hilo;
+package cliente;
 
 import java.util.Scanner;
 
