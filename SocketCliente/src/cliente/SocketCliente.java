@@ -38,10 +38,16 @@ public class SocketCliente {
                     String response = bf.readLine();
                     System.out.println(response);
                     break;
+                } else if (option.equals("2")) {
+                    System.out.print("Ingrese el título de la película: ");
+                    String title = userInput.nextLine();
+                    salida.println(title); // Enviar el título al servidor
+                    String response = bf.readLine();
+                    System.out.println(response);
                 } else if (option.equals("3")) {
                     System.out.print("Ingrese el nombre del director: ");
                     String director = userInput.nextLine();
-                    salida.println(director);
+                    salida.println(director); // Enviar el director al servidor
                     String response = bf.readLine();
                     System.out.println(response);
                 } else if (option.equals("5")) {
@@ -71,10 +77,10 @@ public class SocketCliente {
                 }
             }
         } catch (IOException e) {
-            System.err.println("CLIENTE: Error de entrada/salida");
+            System.out.println("CLIENTE: Error de entrada/salida");
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("CLIENTE: Error -> " + e);
+            System.out.println("CLIENTE: Error -> " + e);
             e.printStackTrace();
         }
 
