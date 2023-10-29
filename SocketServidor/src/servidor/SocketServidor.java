@@ -56,17 +56,22 @@ public class SocketServidor {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                             salida.println("No se encontraron películas para ese director.");
                         }
-                    } else if (stringRecibido.equals("5")) {
-                        // Agregar una nueva película
-                        agregarPelicula(bf, peliculas, socketAlCliente);
-                    } else {
-                        // Simulación de espera
-                        Thread.sleep(15000);
-
-                        PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                        String resultado = "";
-                        salida.println(resultado);
-                    }
+	                    } else if (stringRecibido.equals("5")) {
+	                        // Agregar una nueva película
+	                        agregarPelicula(bf, peliculas, socketAlCliente);
+	                    }else if (stringRecibido.equals("4")) {
+	                    	PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
+	                    	salida.println("Saliendo del programa.");
+	                    	socketAlCliente.close();
+	                    	
+	                    } else {
+	                        // Simulación de espera
+	                        Thread.sleep(15000);
+	
+	                        PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
+	                        String resultado = "";
+	                        salida.println(resultado);
+	                    }
                 } catch (IOException e) {
                     System.err.println("SERVIDOR: Error de entrada/salida");
                     e.printStackTrace();
