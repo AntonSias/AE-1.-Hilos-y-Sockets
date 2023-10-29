@@ -14,7 +14,7 @@ public class SocketServidor {
     public static final int PUERTO = 7565;
 
     public static void main(String[] args) {
-        System.out.println("APLICACIÓN DE SERVIDOR");
+        System.out.println("APLICACIÃ“N DE SERVIDOR");
         System.out.println("----------------------");
 
         List<Pelicula> peliculas = new ArrayList<>();
@@ -32,7 +32,7 @@ public class SocketServidor {
                 System.out.println("SERVIDOR: Esperando peticiones en el puerto " + PUERTO);
 
                 try (Socket socketAlCliente = serverSocket.accept()) {
-                    System.out.println("SERVIDOR: Petición número " + ++peticion + " recibida");
+                    System.out.println("SERVIDOR: PeticiÃ³n nÃºmero " + ++peticion + " recibida");
 
                     InputStreamReader entrada = new InputStreamReader(socketAlCliente.getInputStream());
                     BufferedReader bf = new BufferedReader(entrada);
@@ -45,11 +45,11 @@ public class SocketServidor {
 
                         if (pelicula != null) {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                            // Envía todos los detalles de la película
-                            salida.println("ID: " + pelicula.getIdPelicula() + " Título: " + pelicula.getTitulo() + " Director: " + pelicula.getDirector() + " Precio: " + pelicula.getPrecio());
+                            // EnvÃ­a todos los detalles de la pelÃ­cula
+                            salida.println("ID: " + pelicula.getIdPelicula() + " TÃ­tulo: " + pelicula.getTitulo() + " Director: " + pelicula.getDirector() + " Precio: " + pelicula.getPrecio());
                         } else {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                            salida.println("No se encontró ninguna película con el ID proporcionado.");
+                            salida.println("No se encontrÃ³ ninguna pelÃ­cula con el ID proporcionado.");
                         }
                     } else if (stringRecibido.equals("2")) { // Search by Title
                         String titulo = bf.readLine();
@@ -57,11 +57,11 @@ public class SocketServidor {
 
                         if (pelicula != null) {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                            // Envía todos los detalles de la película
-                            salida.println("ID: " + pelicula.getIdPelicula() + " Título: " + pelicula.getTitulo() + " Director: " + pelicula.getDirector() + " Precio: " + pelicula.getPrecio());
+                            // EnvÃ­a todos los detalles de la pelÃ­cula
+                            salida.println("ID: " + pelicula.getIdPelicula() + " TÃ­tulo: " + pelicula.getTitulo() + " Director: " + pelicula.getDirector() + " Precio: " + pelicula.getPrecio());
                         } else {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                            salida.println("No se encontró ninguna película con el título proporcionado.");
+                            salida.println("No se encontrÃ³ ninguna pelÃ­cula con el tÃ­tulo proporcionado.");
                         }
                     } else if (stringRecibido.equals("3")) { // Search by Director
                         String director = bf.readLine();
@@ -71,13 +71,13 @@ public class SocketServidor {
                             if (pelicula.getDirector().equalsIgnoreCase(directorLimpio)) {
                                 encontrada = true;
                                 PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                                salida.println("ID: " + pelicula.getIdPelicula() + " Título: " + pelicula.getTitulo() + " Director: " + pelicula.getDirector() + " Precio: " + pelicula.getPrecio());
+                                salida.println("ID: " + pelicula.getIdPelicula() + " TÃ­tulo: " + pelicula.getTitulo() + " Director: " + pelicula.getDirector() + " Precio: " + pelicula.getPrecio());
                             }
                         }
 
                         if (!encontrada) {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-                            salida.println("No se encontraron películas para ese director.");
+                            salida.println("No se encontraron pelÃ­culas para ese director.");
                         }
                     } else if (stringRecibido.equals("4")) { // Add Movie
                         agregarPelicula(bf, peliculas, socketAlCliente);
@@ -85,7 +85,7 @@ public class SocketServidor {
                         PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                         salida.println("Hasta luego.");
                     } else {
-                        // Simulación de espera
+                        // SimulaciÃ³n de espera
                         Thread.sleep(15000);
 
                         PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
@@ -112,7 +112,7 @@ public class SocketServidor {
                 return pelicula;
             }
         }
-        return null; // Película no encontrada
+        return null; // PelÃ­cula no encontrada
     }
 
     private static Pelicula buscarPeliculaPorTitulo(String titulo, List<Pelicula> peliculas) {
@@ -121,7 +121,7 @@ public class SocketServidor {
                 return pelicula;
             }
         }
-        return null; // Película no encontrada
+        return null; // PelÃ­cula no encontrada
     }
 
     private static void agregarPelicula(BufferedReader bf, List<Pelicula> peliculas, Socket socketAlCliente) {
@@ -135,7 +135,7 @@ public class SocketServidor {
                 precio = Integer.parseInt(precioStr);
             } catch (NumberFormatException e) {
                 System.err.println("SERVIDOR: Error al convertir precio a entero");
-                precio = 0; // Asigna un valor por defecto si el precio no es válido
+                precio = 0; // Asigna un valor por defecto si el precio no es vÃ¡lido
             }
 
             synchronized (peliculas) {
@@ -143,9 +143,9 @@ public class SocketServidor {
             }
 
             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-            salida.println("Película agregada exitosamente.");
+            salida.println("PelÃ­cula agregada exitosamente.");
         } catch (IOException e) {
-            System.err.println("SERVIDOR: Error de entrada/salida al agregar película");
+            System.err.println("SERVIDOR: Error de entrada/salida al agregar pelÃ­cula");
             e.printStackTrace();
         }
     }

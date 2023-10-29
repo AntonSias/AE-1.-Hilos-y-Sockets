@@ -13,13 +13,13 @@ public class SocketCliente {
     public static final String IP_SERVER = "localhost";
 
     public static void main(String[] args) {
-        System.out.println("APLICACIÓN CLIENTE");
-        System.out.println("MENÚ DE OPCIONES:");
-        System.out.println("1. Consultar película por ID");
-        System.out.println("2. Consultar película por título");
-        System.out.println("3. Consultar películas por director");
-        System.out.println("4. Añadir película");
-        System.out.println("5. Salir de la aplicación");
+        System.out.println("APLICACIÃ“N CLIENTE");
+        System.out.println("MENÃš DE OPCIONES:");
+        System.out.println("1. Consultar pelÃ­cula por ID");
+        System.out.println("2. Consultar pelÃ­cula por tÃ­tulo");
+        System.out.println("3. Consultar pelÃ­culas por director");
+        System.out.println("4. AÃ±adir pelÃ­cula");
+        System.out.println("5. Salir de la aplicaciÃ³n");
         System.out.println("-----------------------");
 
         try (Scanner sc = new Scanner(System.in)) {
@@ -30,7 +30,7 @@ public class SocketCliente {
                      PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
                      InputStreamReader entrada = new InputStreamReader(socketAlServidor.getInputStream());
                      BufferedReader bf = new BufferedReader(entrada)) {
-                    System.out.print("Elija una opción: ");
+                    System.out.print("Elija una opciÃ³n: ");
                     String option = sc.nextLine().trim();
                     salida.println(option);
 
@@ -45,22 +45,22 @@ public class SocketCliente {
                         String response = bf.readLine();
                         System.out.println(response);
                     } else if (option.equals("4")) {
-                        System.out.print("Ingrese el ID de la película: ");
+                        System.out.print("Ingrese el ID de la pelÃ­cula: ");
                         String idPelicula = sc.nextLine().trim();
-                        System.out.print("Ingrese el título de la película: ");
+                        System.out.print("Ingrese el tÃ­tulo de la pelÃ­cula: ");
                         String titulo = sc.nextLine().trim();
                         System.out.print("Ingrese el nombre del director: ");
                         String director = sc.nextLine().trim();
                         
                         int precio;
                         while (true) {
-                            System.out.print("Ingrese el precio de la película: ");
+                            System.out.print("Ingrese el precio de la pelÃ­cula: ");
                             String precioStr = sc.nextLine().trim();
                             try {
                                 precio = Integer.parseInt(precioStr);
                                 break;
                             } catch (NumberFormatException e) {
-                                System.out.println("El precio proporcionado no es un número válido.");
+                                System.out.println("El precio proporcionado no es un nÃºmero vÃ¡lido.");
                             }
                         }
 
@@ -70,19 +70,19 @@ public class SocketCliente {
                         salida.println(precio);
 
                         String response = bf.readLine();
-                        if (response.equals("Película agregada exitosamente.")) {
+                        if (response.equals("PelÃ­cula agregada exitosamente.")) {
                             System.out.println(response);
                         } else {
-                            System.out.println("Error al ingresar la película.");
+                            System.out.println("Error al ingresar la pelÃ­cula.");
                         }
                     } else if (option.equals("1")) {
-                        System.out.print("Ingrese el ID de la película: ");
+                        System.out.print("Ingrese el ID de la pelÃ­cula: ");
                         String idPelicula = sc.nextLine().trim();
                         salida.println(idPelicula);
                         String response = bf.readLine();
                         System.out.println(response);
                     } else if (option.equals("2")) {
-                        System.out.print("Ingrese el título de la película: ");
+                        System.out.print("Ingrese el tÃ­tulo de la pelÃ­cula: ");
                         String titulo = sc.nextLine().trim();
                         salida.println(titulo);
                         String response = bf.readLine();
