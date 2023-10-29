@@ -34,10 +34,8 @@ public class SocketServidor {
                 try (Socket socketAlCliente = serverSocket.accept()) {
                     System.out.println("SERVIDOR: Petición número " + ++peticion + " recibida");
 
-                    // Mover la creación del socket para cada solicitud
                     InputStreamReader entrada = new InputStreamReader(socketAlCliente.getInputStream());
                     BufferedReader bf = new BufferedReader(entrada);
-
                     String stringRecibido = bf.readLine();
                     System.out.println("SERVIDOR: Me ha llegado del cliente: " + stringRecibido);
 
@@ -81,7 +79,9 @@ public class SocketServidor {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                             salida.println("No se encontraron películas para ese director.");
                         }
-                    } else if (stringRecibido.equals("4")) { // Exit
+                    } else if (stringRecibido.equals("4")) { // Add Movie
+                        agregarPelicula(bf, peliculas, socketAlCliente);
+                    } else if (stringRecibido.equals("5")) { // Exit
                         PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                         salida.println("Hasta luego.");
                     } else {
@@ -123,7 +123,7 @@ public class SocketServidor {
         }
         return null; // Película no encontrada
     }
-    
+
     private static void agregarPelicula(BufferedReader bf, List<Pelicula> peliculas, Socket socketAlCliente) {
         try {
             String idPelicula = bf.readLine();
@@ -131,7 +131,7 @@ public class SocketServidor {
             String director = bf.readLine();
             int precio;
             try {
-            	String precioStr = bf.readLine();
+                String precioStr = bf.readLine();
                 precio = Integer.parseInt(precioStr);
             } catch (NumberFormatException e) {
                 System.err.println("SERVIDOR: Error al convertir precio a entero");
