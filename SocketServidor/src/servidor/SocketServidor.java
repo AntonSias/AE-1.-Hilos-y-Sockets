@@ -16,7 +16,7 @@ public class SocketServidor {
     public static void main(String[] args) {
         System.out.println("APLICACIÓN DE SERVIDOR");
         System.out.println("----------------------");
-
+        //LISTA DE PELICULAS
         List<Pelicula> peliculas = new ArrayList<>();
 
         peliculas.add(new Pelicula("A0215", "Encuentro en la tercera fase", "Steven Spielberg", 25));
@@ -24,10 +24,10 @@ public class SocketServidor {
         peliculas.add(new Pelicula("A752", "Los idiotas", "Lars Von Trier", 18));
         peliculas.add(new Pelicula("A962", "Cache", "Michael Haneke", 12));
         peliculas.add(new Pelicula("A0256", "Mulholland Drive", "David Lynch", 30));
-
+        //CONEXION
         try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
             int peticion = 0;
-
+            //Mantenemos la conexión abierta
             while (true) {
                 System.out.println("SERVIDOR: Esperando peticiones en el puerto " + PUERTO);
 
@@ -38,8 +38,9 @@ public class SocketServidor {
                     BufferedReader bf = new BufferedReader(entrada);
                     String stringRecibido = bf.readLine();
                     System.out.println("SERVIDOR: Me ha llegado del cliente: " + stringRecibido);
-
-                    if (stringRecibido.equals("1")) { // Search by ID
+                    
+                    //MENU DE OPCIONES, RECOGEMOS LOS PARÁMETROS
+                    if (stringRecibido.equals("1")) { // BUSCAR POR ID
                         String id = bf.readLine();
                         Pelicula pelicula = buscarPeliculaPorID(id, peliculas);
 
@@ -51,7 +52,7 @@ public class SocketServidor {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                             salida.println("No se encontró ninguna película con el ID proporcionado.");
                         }
-                    } else if (stringRecibido.equals("2")) { // Search by Title
+                    } else if (stringRecibido.equals("2")) { // BUSCAR POR TITULO
                         String titulo = bf.readLine();
                         Pelicula pelicula = buscarPeliculaPorTitulo(titulo, peliculas);
 
@@ -63,7 +64,7 @@ public class SocketServidor {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                             salida.println("No se encontró ninguna película con el título proporcionado.");
                         }
-                    } else if (stringRecibido.equals("3")) { // Search by Director
+                    } else if (stringRecibido.equals("3")) { // BUSCAR POR DIRECTOR
                         String director = bf.readLine();
                         String directorLimpio = director.trim();
                         boolean encontrada = false;
@@ -79,9 +80,9 @@ public class SocketServidor {
                             PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                             salida.println("No se encontraron películas para ese director.");
                         }
-                    } else if (stringRecibido.equals("4")) { // Add Movie
+                    } else if (stringRecibido.equals("4")) { // AGREGAR PELICULA
                         agregarPelicula(bf, peliculas, socketAlCliente);
-                    } else if (stringRecibido.equals("5")) { // Exit
+                    } else if (stringRecibido.equals("5")) { // SALIR
                         PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
                         salida.println("Hasta luego.");
                     } else {
@@ -92,6 +93,7 @@ public class SocketServidor {
                         String resultado = "";
                         salida.println(resultado);
                     }
+                    //EXCEPCIONES
                 } catch (IOException e) {
                     System.out.println("SERVIDOR: Error de entrada/salida");
                     e.printStackTrace();
@@ -100,12 +102,13 @@ public class SocketServidor {
                     e.printStackTrace();
                 }
             }
+            //EXCEPCIONES
         } catch (IOException e) {
             System.out.println("SERVIDOR: Error de entrada/salida");
             e.printStackTrace();
         }
     }
-
+    //METODO BUSCAR PELICULA POR ID
     private static Pelicula buscarPeliculaPorID(String id, List<Pelicula> peliculas) {
         for (Pelicula pelicula : peliculas) {
             if (pelicula.getIdPelicula().equalsIgnoreCase(id)) {
@@ -114,7 +117,7 @@ public class SocketServidor {
         }
         return null; // Película no encontrada
     }
-
+    //MÉTODO BUSCAR PELÍCULA POR TITULO
     private static Pelicula buscarPeliculaPorTitulo(String titulo, List<Pelicula> peliculas) {
         for (Pelicula pelicula : peliculas) {
             if (pelicula.getTitulo().equalsIgnoreCase(titulo)) {
@@ -123,7 +126,7 @@ public class SocketServidor {
         }
         return null; // Película no encontrada
     }
-
+    //METODO AGREGAR PELICULA
     private static void agregarPelicula(BufferedReader bf, List<Pelicula> peliculas, Socket socketAlCliente) {
         try {
             String idPelicula = bf.readLine();

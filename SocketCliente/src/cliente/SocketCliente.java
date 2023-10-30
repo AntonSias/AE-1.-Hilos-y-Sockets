@@ -13,6 +13,7 @@ public class SocketCliente {
     public static final String IP_SERVER = "localhost";
 
     public static void main(String[] args) {
+    	//Menu
         System.out.println("APLICACIÓN CLIENTE");
         System.out.println("MENÚ DE OPCIONES:");
         System.out.println("1. Consultar película por ID");
@@ -22,6 +23,7 @@ public class SocketCliente {
         System.out.println("5. Salir de la aplicación");
         System.out.println("-----------------------");
 
+        //CONEXION
         try (Scanner sc = new Scanner(System.in)) {
             boolean salir = false;
 
@@ -33,7 +35,7 @@ public class SocketCliente {
                     System.out.print("Elija una opción: ");
                     String option = sc.nextLine().trim();
                     salida.println(option);
-
+                    //OPCIONES
                     if (option.equals("5")) {
                         String response = bf.readLine();
                         System.out.println(response);
@@ -91,6 +93,7 @@ public class SocketCliente {
                         String response = bf.readLine();
                         System.out.println(response);
                     }
+                    //EXCEPCIONES
                 } catch (IOException e) {
                     System.out.println("CLIENTE: Error de entrada/salida");
                     e.printStackTrace();
