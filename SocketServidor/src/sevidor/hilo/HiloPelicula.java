@@ -20,6 +20,7 @@ public class HiloPelicula implements Runnable {
 	private Thread hilo;
 	private Socket socketAlCliente;
 	private List<PeliculaClass> listaPeliculas = new ArrayList<>();
+	private PrintStream out;
 
 	
 	
@@ -65,40 +66,28 @@ public class HiloPelicula implements Runnable {
 			texto = entradaBuffer.readLine();
 			numTexto = Integer.valueOf(texto.trim());
 			
+			Object in;
 			switch (numTexto) {
 				case 1: {
-					//METODO 1
+					// Consultar película por ID
+                        int id = ((Object) in).readInt();
+                        Pelicula pelicula = getPeliculaPorID(id);
+                        out.writeObject(pelicula);
 					
 				}
 				case 2: {
 					
-					//METODO 2
+					String titulo = in.readUTF();
+                    List<Pelicula> peliculasPorTitulo = getPeliculasPorTitulo(titulo);
+                    out.writeObject(peliculasPorTitulo);
+                    break;
 				}
 				case 3: {
 					//METODO 3
-					 private static void agregarPelicula(BufferedReader bf, List<Pelicula> peliculas, Socket socketAlCliente) {
-					        try {
-					            String idPelicula = bf.readLine();
-					            String titulo = bf.readLine();
-					            String director = bf.readLine();
-					            int precio;
-					            try {
-					            	String precioStr = bf.readLine();
-					                precio = Integer.parseInt(precioStr);
-					            } catch (NumberFormatException e) {
-					                System.err.println("SERVIDOR: Error al convertir precio a entero");
-					                precio = 0; // Asigna un valor por defecto si el precio no es válido
-					            }
-
-					            synchronized (peliculas) {
-					                peliculas.add(new Pelicula(idPelicula, titulo, director, precio));
-					            }
-
-					            PrintStream salida = new PrintStream(socketAlCliente.getOutputStream());
-					            salida.println("Película agregada exitosamente.");
-					        } catch (IOException e) {
-					            System.err.println("SERVIDOR: Error de entrada/salida al agregar película");
-					            e.printStackTrace();
+					 String director = in.readUTF();
+                     List<Pelicula> peliculasPorDirector = getPeliculasPorDirector(director);
+                     out.writeObject(peliculasPorDirector);
+                     break;
 					        }
 				
 				case 4: {
@@ -151,10 +140,6 @@ public class HiloPelicula implements Runnable {
 
 
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 }
