@@ -7,13 +7,15 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import scanner;
+
+
 
 
 
 public class HiloPelicula implements Runnable {
 	
 	
+	private static Object scanner;
 	private int numCliente = 0;
 	private Thread hilo;
 	private Socket socketAlCliente;
@@ -40,7 +42,6 @@ public class HiloPelicula implements Runnable {
 	
 	
 	
-	@Override
 	public void run(Object scanner) {
 		System.out.println("Estableciendo comunicacion");
 		PrintStream salida = null;
@@ -98,11 +99,27 @@ public class HiloPelicula implements Runnable {
 					        } catch (IOException e) {
 					            System.err.println("SERVIDOR: Error de entrada/salida al agregar película");
 					            e.printStackTrace();
-					
+					        }
 				
 				case 4: {
 					
 					//METODO 4
+					System.out.print("ID: ");
+					
+					int id = scanner.nextInt();
+					System.out.println("Titulo: ");
+					String titulo = scanner.nextInt();
+					System.out.println("Director: ");
+					String director = scanner.nextInt();
+					System.out.println("Precio: ");
+					double precio = scanner.nextInt();
+					
+					HiloPelicula newPelicula = new Pelicula();
+					out.writeobjec(new Pelicula);
+					out.flush();
+					System.out.println("Pelicula agregada exitosamente: ");
+					
+					
 					
 				}
 				case 5: {
